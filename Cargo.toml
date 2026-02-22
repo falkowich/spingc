@@ -1,0 +1,12 @@
+[package]
+name = "spingc"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+chrono = { version = "0.4.43", features = ["serde"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+surge-ping = "0.8.4"
+tokio = { version = "1.49.0", features = ["full"] }
+toml = "1.0.3"

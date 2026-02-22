@@ -1,0 +1,23 @@
+[burst]
+count = 10 # Every time send a burst of 10 pings in a row
+timer = 60 # Sent a burst ever 60 seconds
+
+[[targets]]
+ip = "1.2.3.4"
+name = "local.gatway"
+
+[[targets]]
+ip = "3.4.5.6"
+name = "next hop"
+
+[[targets]]
+ip = "7.8.9.1"
+name = "next next hop"
+
+[[targets]]
+ip = "8.8.8.8"
+name = "next next next hop"
+   
+[[targets]]
+ip = "172.217.19.238"
+name = "google.com"
