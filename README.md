@@ -43,9 +43,72 @@ name = "google.com"
 | `targets.ip` | Target IP (FQDN not supported) |
 | `targets.name` | Human-readable label |
 
+## Finding your network path
+
+Before configuring targets, map your route to identify interesting hops to monitor.
+
+### Windows
+```
+tracert 8.8.8.8
+```
+
+Example output:
+```
+Tracing route to dns.google [8.8.8.8] over a maximum of 30 hops:
+
+  1    <1 ms    <1 ms    <1 ms  192.168.1.1
+  2     *        *        *     Request timed out.
+  3     1 ms     1 ms     1 ms  gw1-customer.isp-example.net [83.24.110.1]
+  4     4 ms     5 ms     4 ms  core1-sto.isp-example.net [83.24.100.5]
+  5     2 ms     2 ms     2 ms  peer1-sto.upstream-net.net [91.200.16.1]
+  6     2 ms     2 ms     3 ms  dns.google [8.8.8.8]
+```
+
+### Linux/macOS
+```bash
+mtr --report 8.8.8.8
+```
+
+Pick the interesting hops as targets—typically your local gateway, your ISP edge router, and one or two upstream hops. Skip hops that show `* * *` (they block ICMP but still forward traffic).
+
+### Example config.toml based on the route above
+```toml
+[burst]
+count = 10        # Send a burst of 10 pings per interval
+timer = 60        # Interval in seconds between bursts
+
+[[targets]]
+ip = "192.168.1.1"
+name = "Local GW"
+
+[[targets]]
+ip = "83.24.110.1"
+name = "gw1-customer.isp-example.net"
+
+[[targets]]
+ip = "83.24.100.5"
+name = "core1-sto.isp-example.net"
+
+[[targets]]
+ip = "91.200.16.1"
+name = "peer1-sto.upstream-net.net"
+
+[[targets]]
+ip = "8.8.8.8"
+name = "Google DNS"
+```
+
 ## Usage
+
+Linux:
+
 ```bash
 ./spingc
+
+```
+Windows terminal:
+```powershell
+.\spingc.exe
 ```
 
 Runs continuously. Results are appended to `results.ndjson` in the current directory.
