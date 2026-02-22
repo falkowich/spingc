@@ -1,8 +1,11 @@
 # spingc
 
-A lightweight network diagnostic tool inspired by SmokePing. Sends ICMP burst pings to multiple targets, calculates RTT statistics, and logs structured NDJSON output for later analysis.
+A lightweight and perhaps fugly network diagnostic tool inspired by SmokePing. 
+Sends ICMP burst pings to multiple targets, calculates RTT statistics, and logs structured NDJSON output for later analysis.
 
 Built to diagnose intermittent ISP connectivity issues — specifically to identify whether packet loss and latency spikes occur at the local gateway, ISP edge, or further upstream.
+
+This is a tool that is a learning path to rust knowladge for me..
 
 ## Features
 
