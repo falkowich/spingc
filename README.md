@@ -21,7 +21,7 @@ Create a `config.toml` in the same directory as the binary:
 ```toml
 [burst]
 count = 10
-timer = 60
+timer = 20
 
 [[targets]]
 ip = "192.168.1.1"

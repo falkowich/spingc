@@ -1,6 +1,6 @@
 [burst]
 count = 10 # Every time send a burst of 10 pings in a row
-timer = 60 # Sent a burst ever 60 seconds
+timer = 20 # Sent a burst ever 20 seconds
 
 [[targets]]
 ip = "1.2.3.4"
