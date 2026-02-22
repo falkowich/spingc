@@ -1,9 +1,7 @@
 use chrono::{DateTime, Local};
 use serde::{Deserialize, Serialize};
-use serde_json;
 use std::{fs, time::Duration};
 use surge_ping::{Client, Config, PingIdentifier, PingSequence};
-use toml;
 
 #[derive(Debug, Deserialize)]
 struct Conf {
@@ -40,17 +38,17 @@ struct RTTs {
     loss: f32,
 }
 
-fn median(burst_res: &mut Vec<Duration>) -> f32 {
+fn median(burst_res: &mut [Duration]) -> f32 {
     burst_res.sort();
     let mid = burst_res.len() / 2;
-    if burst_res.len() % 2 == 0 {
+    if burst_res.len().is_multiple_of(2) {
         (burst_res[mid - 1].as_secs_f32() + burst_res[mid].as_secs_f32()) / 2.0 * 1000.0
     } else {
         burst_res[mid].as_secs_f32() * 1000.0
     }
 }
 
-fn create_rtt(burst_res: &mut Vec<Duration>, expected: usize) -> RTTs {
+fn create_rtt(burst_res: &mut [Duration], expected: usize) -> RTTs {
     if burst_res.is_empty() {
         return RTTs {
             min: -1.0,
@@ -91,9 +89,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 let client = Client::new(&Config::default())?;
                 let mut pinger = client.pinger(target.ip.parse()?, PingIdentifier(0)).await;
                 pinger.timeout(Duration::from_secs(1));
-                match pinger.ping(PingSequence(n as u16), &payload).await {
-                    Ok((_packet, duration)) => burst_res.push(duration),
-                    Err(_) => {}
+                if let Ok((_packet, duration)) = pinger.ping(PingSequence(n as u16), &payload).await
+                {
+                    burst_res.push(duration)
                 }
             }
             let rtt = create_rtt(&mut burst_res, config.burst.count as usize);
@@ -122,7 +120,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let _writeout = serde_json::to_writer_pretty(&mut file, &output);
         }
 
-        println!("");
+        println!();
         tokio::time::sleep(Duration::from_secs(config.burst.timer as u64)).await;
     }
     #[allow(unreachable_code)]
