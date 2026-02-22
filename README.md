@@ -34,7 +34,7 @@ name = "ISP GW"
 [[targets]]
 ip = "172.217.19.238"
 name = "google.com"
-​```
+```
 
 | Field | Description |
 |---|---|
